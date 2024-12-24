@@ -1,0 +1,128 @@
+{
+	"compiler": {
+		"version": "0.8.26+commit.8a97fa7a"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "donor",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "string",
+						"name": "cause",
+						"type": "string"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "totalDonations",
+						"type": "uint256"
+					}
+				],
+				"name": "DonationMade",
+				"type": "event"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"name": "donationsForCause",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "cause",
+						"type": "string"
+					}
+				],
+				"name": "makeDonation",
+				"outputs": [],
+				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "cause",
+						"type": "string"
+					}
+				],
+				"name": "viewTotalDonations",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"project-19/contracts/contract.sol": "MicroDonationPlatform"
+		},
+		"evmVersion": "cancun",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"project-19/contracts/contract.sol": {
+			"keccak256": "0xbc8fc9b6da11265f93b952e0f8fa3ecc0f72b4cb5ffcb46f98e843eaa2e8953f",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://f231add699315fbd79a0884294fcd7e0ee718c7d44f69e48453ecf2102e69ebb",
+				"dweb:/ipfs/QmRWVAtGX1DarENhWoE2TFAEZbNeBE6FveSjBmVhMm5tGb"
+			]
+		}
+	},
+	"version": 1
+}

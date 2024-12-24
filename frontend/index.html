@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Micro Donation Platform</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.6.0/web3.min.js"></script>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background-color: #f4f4f9;
+      }
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        text-align: center;
+      }
+      input[type="text"],
+      input[type="number"],
+      button {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+      }
+      button {
+        background-color: #4caf50;
+        color: white;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: #45a049;
+      }
+      .donation-list {
+        margin-top: 20px;
+      }
+      .cause {
+        padding: 10px;
+        background-color: #f9f9f9;
+        margin: 5px 0;
+        border-radius: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Micro Donation Platform</h1>
+      <div>
+        <h2>Make a Donation</h2>
+        <label for="cause">Cause:</label>
+        <input type="text" id="cause" placeholder="Enter cause name" />
+        <label for="amount">Amount (in Ether):</label>
+        <input
+          type="number"
+          id="amount"
+          placeholder="Enter amount to donate"
+          step="0.01"
+        />
+        <button onclick="donate()">Donate</button>
+      </div>
+
+      <div class="donation-list">
+        <h2>View Total Donations</h2>
+        <label for="viewCause">Enter Cause Name:</label>
+        <input
+          type="text"
+          id="viewCause"
+          placeholder="Enter cause to view donations"
+        />
+        <button onclick="viewDonations()">View Donations</button>
+        <p id="donationAmount"></p>
+      </div>
+
+      <div id="status"></div>
+    </div>
+
+    <script>
+      // Ensure Web3 is available
+      if (typeof window.ethereum !== "undefined") {
+        console.log("MetaMask is installed!");
+      } else {
+        alert("Please install MetaMask to interact with this platform.");
+      }
+
+      // Web3 Setup
+      const web3 = new Web3(window.ethereum);
+      let contract;
+      let userAccount;
+      const contractAddress = "0x1EB61c46350cFd76647015a6fB8248B749e561D0"; // Replace with deployed contract address
+      const abi = [
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "address",
+              name: "donor",
+              type: "address",
+            },
+            {
+              indexed: false,
+              internalType: "string",
+              name: "cause",
+              type: "string",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "amount",
+              type: "uint256",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "totalDonations",
+              type: "uint256",
+            },
+          ],
+          name: "DonationMade",
+          type: "event",
+        },
+        {
+          inputs: [
+            {
+              internalType: "string",
+              name: "",
+              type: "string",
+            },
+          ],
+          name: "donationsForCause",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "string",
+              name: "cause",
+              type: "string",
+            },
+          ],
+          name: "makeDonation",
+          outputs: [],
+          stateMutability: "payable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "string",
+              name: "cause",
+              type: "string",
+            },
+          ],
+          name: "viewTotalDonations",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+      ];
+
+      async function init() {
+        if (typeof window.ethereum !== "undefined") {
+          await ethereum.request({ method: "eth_requestAccounts" });
+          userAccount = (await web3.eth.getAccounts())[0];
+          contract = new web3.eth.Contract(abi, contractAddress);
+          document.getElementById(
+            "status"
+          ).innerHTML = `Connected: ${userAccount}`;
+        } else {
+          alert("Please install MetaMask!");
+        }
+      }
+
+      async function donate() {
+        const cause = document.getElementById("cause").value;
+        const amount = document.getElementById("amount").value;
+
+        if (!cause || !amount) {
+          alert("Please fill in both cause and donation amount.");
+          return;
+        }
+
+        const donationAmount = web3.utils.toWei(amount, "ether");
+
+        try {
+    
